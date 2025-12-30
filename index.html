@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8" />  <title>Time Value Awareness</title>
+  <style>    body {      margin: 0;      padding: 16px;      background: #0f1115;      color: #e6e6e6;      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;    }
+    .container {      max-width: 320px;    }
+    .title {      font-size: 14px;      font-weight: 500;      opacity: 0.75;      margin-bottom: 12px;    }
+    .row {      display: flex;      justify-content: space-between;      padding: 4px 0;      font-size: 13px;      line-height: 1.4;    }
+    .label {      opacity: 0.6;    }
+    .value {      font-variant-numeric: tabular-nums;      opacity: 0.9;    }  </style></head>
+<body>  <div class="container">    <div class="title">Current Time Value</div>
+    <div class="row">      <span class="label">1 second</span>      <span class="value" id="sec"></span>    </div>
+    <div class="row">      <span class="label">10 minutes</span>      <span class="value" id="tenMin"></span>    </div>
+    <div class="row">      <span class="label">1 hour</span>      <span class="value" id="hour"></span>    </div>
+    <div class="row">      <span class="label">12 hours</span>      <span class="value" id="halfDay"></span>    </div>
+    <div class="row">      <span class="label">1 day</span>      <span class="value" id="day"></span>    </div>  </div>
+  <script>    // Fixed exam dates    const EXAM_2026 = new Date("2026-05-03T00:00:00");    const EXAM_2027 = new Date("2027-05-02T00:00:00");
+    function formatDuration(seconds) {      seconds = Math.round(seconds);
+      const days = Math.floor(seconds / 86400);      seconds %= 86400;      const hours = Math.floor(seconds / 3600);      seconds %= 3600;      const minutes = Math.floor(seconds / 60);      const secs = seconds % 60;
+      if (days > 0) return `${days}d ${hours}h`;      if (hours > 0) return `${hours}h ${minutes}m`;      if (minutes > 0) return `${minutes}m ${secs}s`;      return `${secs}s`;    }
+    function updateTimeValue() {      const now = new Date();
+      const remaining = (EXAM_2026 - now) / 1000; // seconds      const penalty = (EXAM_2027 - EXAM_2026) / 1000;
+      if (remaining <= 0) return;
+      const TVR = (remaining + penalty) / remaining;
+      document.getElementById("sec").textContent =        formatDuration(1 * TVR);
+      document.getElementById("tenMin").textContent =        formatDuration(600 * TVR);
+      document.getElementById("hour").textContent =        formatDuration(3600 * TVR);
+      document.getElementById("halfDay").textContent =        formatDuration(43200 * TVR);
+      document.getElementById("day").textContent =        formatDuration(86400 * TVR);    }
+    updateTimeValue();    setInterval(updateTimeValue, 60000); // update every minute  </script></body></html>
